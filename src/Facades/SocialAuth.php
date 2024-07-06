@@ -13,6 +13,6 @@ class SocialAuth extends Facade
      */
     protected static function getFacadeAccessor(): string
     {
-        return 'social-auth';
+        return 'socialauth';
     }
 }

@@ -16,7 +16,7 @@ class SocialAuthServiceProvider extends ServiceProvider
         // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'rzb');
         // $this->loadViewsFrom(__DIR__.'/../resources/views', 'rzb');
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
-        // $this->loadRoutesFrom(__DIR__.'/routes.php');
+        $this->loadRoutesFrom(__DIR__.'/../routes/social.php');
 
         // Publishing is only necessary when using the CLI.
         if ($this->app->runningInConsole()) {
@@ -35,7 +35,9 @@ class SocialAuthServiceProvider extends ServiceProvider
 
         // Register the service the package provides.
         $this->app->singleton('socialauth', function ($app) {
-            return new SocialAuth;
+            return new SocialAuth(
+                request()->provider ?: 'google'
+            );
         });
     }
 
