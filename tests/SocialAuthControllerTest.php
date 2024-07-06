@@ -2,13 +2,14 @@
 
 namespace Tests;
 
+use Illuminate\Support\Facades\Config;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\SocialiteServiceProvider;
 use Orchestra\Testbench\TestCase;
-use R64\SocialAuth\Facades\SocialAuth;
-use R64\SocialAuth\SocialAuthServiceProvider;
+use Facades\Rzb\SocialAuth\SocialAuth;
+use Rzb\SocialAuth\SocialAuthServiceProvider;
 use Tests\Mocks\SocialProvider;
-use Tests\Models\User;
+use Tests\Models\User as Sociable;
 
 class SocialAuthControllerTest extends TestCase
 {
@@ -17,17 +18,19 @@ class SocialAuthControllerTest extends TestCase
         parent::setUp();
 
         Socialite::shouldReceive('driver')->andReturn(new SocialProvider());
+
+        Config::set('socialauth.sociables.user.model', Sociable::class);
     }
 
     /** @test */
     public function it_returns_the_url_from_the_given_provider()
     {
-        SocialAuth::shouldReceive('provider->for->stateless->getRedirectUrl')
+        SocialAuth::shouldReceive('stateless->getRedirectUrl')
             ->andReturn('https://provider.example');
 
         $response = $this->getJson(route('social.redirect', [
             'provider' => 'google',
-            'sociable' => User::class,
+            'sociable' => 'user',
         ]));
 
         $response
@@ -38,13 +41,13 @@ class SocialAuthControllerTest extends TestCase
     /** @test */
     public function it_returns_the_sociable_model_for_the_given_provider_and_token()
     {
-        $sociable = User::factory()->make();
-        SocialAuth::shouldReceive('provider->for->stateless->getUserFromToken')
+        $sociable = Sociable::factory()->make();
+        SocialAuth::shouldReceive('stateless->getUserFromToken')
             ->andReturn($sociable);
 
         $response = $this->postJson(route('social.callback', [
             'provider' => 'google',
-            'sociable' => User::class,
+            'sociable' => 'user',
             'access_token' => 'whatever',
         ]));
 

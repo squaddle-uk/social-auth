@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use Illuminate\Support\Facades\Config;
 use Rzb\SocialAuth\Models\SocialAccount;
 use Rzb\SocialAuth\SocialAuth;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -16,20 +17,23 @@ class SocialAuthTest extends TestCase
 {
     use RefreshDatabase;
 
+    private SocialAuth $socialAuth;
+
     public function setUp(): void
     {
         parent::setUp();
 
         Socialite::shouldReceive('driver')->andReturn(new SocialProvider());
+
+        Config::set('socialauth.sociables.user.model', Sociable::class);
+
+        $this->socialAuth = new SocialAuth('google', 'user');
     }
 
     /** @test */
     public function it_creates_user_and_social_account_when_email_is_not_found()
     {
-        SocialAuth::provider('google')
-            ->for(Sociable::class)
-            ->stateless()
-            ->getUserFromToken('whatever');
+        $this->socialAuth->getUserFromToken('whatever');
 
         $this->assertDatabaseCount('users', 1);
         $this->assertDatabaseCount('social_accounts', 1);
@@ -44,10 +48,7 @@ class SocialAuthTest extends TestCase
     {
         $user = Sociable::factory()->create(['email' => 'sociallogin@example.com']);
 
-        SocialAuth::provider('google')
-            ->for(Sociable::class)
-            ->stateless()
-            ->getUserFromToken('whatever');
+        $this->socialAuth->getUserFromToken('whatever');
 
         $this->assertDatabaseHas('users', ['email' => 'sociallogin@example.com']);
         $this->assertDatabaseCount('users', 1);
@@ -62,10 +63,7 @@ class SocialAuthTest extends TestCase
             ->for(Sociable::factory()->create(['email' => 'sociallogin@example.com']), 'sociable')
             ->create(['provider_user_id' => 'a_google_token', 'provider' => 'social']);
 
-        SocialAuth::provider('google')
-            ->for(Sociable::class)
-            ->stateless()
-            ->getUserFromToken('whatever');
+        $this->socialAuth->getUserFromToken('whatever');
 
         $this->assertDatabaseHas('users', ['email' => 'sociallogin@example.com']);
         $this->assertDatabaseCount('users', 1);

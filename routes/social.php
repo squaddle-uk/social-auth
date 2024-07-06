@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use R64\SocialAuth\Http\Controllers\SocialAuthController;
+use Rzb\SocialAuth\Http\Controllers\SocialAuthController;
 
 Route::get('auth/social/{provider}/{sociable}', [SocialAuthController::class, 'redirect'])
     ->where('provider', 'google')

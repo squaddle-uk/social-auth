@@ -1,6 +1,6 @@
 <?php
 
-namespace R64\SocialAuth\Http\Requests;
+namespace Rzb\SocialAuth\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 

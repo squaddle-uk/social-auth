@@ -34,11 +34,14 @@ class SocialAuthServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../config/socialauth.php', 'socialauth');
 
         // Register the service the package provides.
-        $this->app->singleton('socialauth', function ($app) {
+        $this->app->singleton(SocialAuth::class, function ($app) {
             return new SocialAuth(
-                request()->provider ?: 'google'
+                request()->provider ?: config('socialauth.defaults.provider'),
+                request()->sociable ?: config('socialauth.defaults.sociable'),
             );
         });
+
+        $this->app->alias(SocialAuth::class, 'socialauth');
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace R64\SocialAuth\Http\Controllers;
+namespace Rzb\SocialAuth\Http\Controllers;
 
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;

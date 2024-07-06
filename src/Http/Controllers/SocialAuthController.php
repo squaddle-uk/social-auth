@@ -1,31 +1,25 @@
 <?php
 
-namespace R64\SocialAuth\Http\Controllers;
+namespace Rzb\SocialAuth\Http\Controllers;
 
 //use App\Http\Resources\UserResource;
 use Illuminate\Http\JsonResponse;
-use R64\SocialAuth\Facades\SocialAuth;
-use R64\SocialAuth\Http\Requests\SocialAuthCallbackRequest;
+use Rzb\SocialAuth\Http\Requests\SocialAuthCallbackRequest as CallbackRequest;
+use Rzb\SocialAuth\SocialAuth;
 
 class SocialAuthController extends Controller
 {
-    public function redirect(string $provider, string $sociable): string
+    public function __construct(private SocialAuth $socialAuth)
+    {}
+
+    public function redirect(): string
     {
-        return SocialAuth::provider($provider)
-            ->for($sociable)
-            ->stateless()
-            ->getRedirectUrl();
+        return $this->socialAuth->stateless()->getRedirectUrl();
     }
 
-    public function callback(
-        string $provider,
-        string $sociable,
-        SocialAuthCallbackRequest $request): JsonResponse
+    public function callback(CallbackRequest $request): JsonResponse
     {
-        $user = SocialAuth::provider($provider)
-            ->for($sociable)
-            ->stateless()
-            ->getUserFromToken($request->access_token);
+        $user = $this->socialAuth->stateless()->getUserFromToken($request->access_token);
 
         return response()->json([
             'success' => true,

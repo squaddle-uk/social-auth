@@ -3,6 +3,7 @@
 namespace Rzb\SocialAuth;
 
 use App\Exceptions\SocialAuthException;
+use InvalidArgumentException;
 use Rzb\SocialAuth\Contracts\Sociable;
 use Rzb\SocialAuth\Models\SocialAccount;
 use Illuminate\Support\Str;
@@ -13,25 +14,27 @@ class SocialAuth
 {
     private Provider $provider;
 
-    private string $sociableClass;
+    private string $sociable;
 
-    public function __construct(string $provider, string $sociableClass = '')
+    public function __construct(string $provider, string $sociable)
     {
+        $config = config("socialauth.sociables.$sociable");
+
+        if (! $config || ! array_key_exists('model', $config)) {
+            throw new InvalidArgumentException(
+                "SocialAuth sociable [$sociable] is not defined."
+            );
+        }
+
+        $this->sociable = $config['model'];
+
+        if (! array_key_exists('providers', $config) || ! in_array($provider, $config['providers'])) {
+            throw new InvalidArgumentException(
+                "SocialAuth provider [$provider] isn't allowed for sociable [$sociable]."
+            );
+        }
+
         $this->provider = Socialite::driver($provider);
-
-        $this->sociableClass = $sociableClass ?: config('auth.providers.users.model');
-    }
-
-    public static function provider(string $provider): self
-    {
-        return new self($provider);
-    }
-
-    public function for(string $sociableClass)
-    {
-        $this->sociableClass = $sociableClass;
-
-        return $this;
     }
 
     public function stateless(): self
@@ -84,7 +87,7 @@ class SocialAuth
     private function getOrCreateUser($providerUser): Sociable
     {
         return call_user_func(
-            [$this->sociableClass, 'createFromSocialUser'],
+            [$this->sociable, 'createFromSocialUser'],
             $providerUser
         );
     }
