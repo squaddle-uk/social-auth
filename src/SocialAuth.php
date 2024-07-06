@@ -60,10 +60,10 @@ class SocialAuth
             throw new SocialAuthException($this->getProviderName());
         }
 
-        return $this->providerUserToAppUser($providerUser);
+        return $this->providerUserToSociable($providerUser);
     }
 
-    private function providerUserToAppUser($providerUser): Sociable
+    private function providerUserToSociable($providerUser): Sociable
     {
         $socialAccount = SocialAccount::with('sociable')->firstOrNew([
             'provider_user_id' => $providerUser->getId(),
@@ -71,20 +71,20 @@ class SocialAuth
         ]);
 
         // If we found a matching Social Account, we can safely assume that we already have
-        // a corresponding User, i.e. the User has already signed in using this Social
-        // account in the past, as Social Accounts cannot be created without Users.
+        // a corresponding Sociable, i.e. the Sociable has already signed in using this
+        // Social Account, as Social Accounts cannot be created without a Sociable.
         if ($socialAccount->exists) {
             return $socialAccount->sociable;
         }
 
-        $user = $this->getOrCreateUser($providerUser);
+        $sociable = $this->getOrCreateSociable($providerUser);
 
-        $socialAccount->sociable()->associate($user)->save();
+        $socialAccount->sociable()->associate($sociable)->save();
 
-        return $user;
+        return $sociable;
     }
 
-    private function getOrCreateUser($providerUser): Sociable
+    private function getOrCreateSociable($providerUser): Sociable
     {
         return call_user_func(
             [$this->sociable, 'createFromSocialUser'],
