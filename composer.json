@@ -1,0 +1,41 @@
+{
+    "name": "rzb/socialauth",
+    "description": "Social authentication boilerplate.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Renato Zuma",
+            "email": "renatozuma@gmail.com",
+            "homepage": "https://renatozuma.com.br"
+        }
+    ],
+    "homepage": "https://github.com/rzb/socialauth",
+    "keywords": ["Laravel", "SocialAuth"],
+    "require": {
+        "illuminate/support": "~9"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~9.0",
+        "orchestra/testbench": "~7"
+    },
+    "autoload": {
+        "psr-4": {
+            "Rzb\\SocialAuth\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Rzb\\SocialAuth\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Rzb\\SocialAuth\\SocialAuthServiceProvider"
+            ],
+            "aliases": {
+                "SocialAuth": "Rzb\\SocialAuth\\Facades\\SocialAuth"
+            }
+        }
+    }
+}
