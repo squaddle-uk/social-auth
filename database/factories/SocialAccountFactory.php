@@ -1,6 +1,6 @@
 <?php
 
-namespace R64\SocialAuth\Database\Factories;
+namespace Rzb\SocialAuth\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Foundation\Auth\User;

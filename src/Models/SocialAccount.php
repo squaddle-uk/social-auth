@@ -1,6 +1,6 @@
 <?php
 
-namespace R64\SocialAuth\Models;
+namespace Rzb\SocialAuth\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
