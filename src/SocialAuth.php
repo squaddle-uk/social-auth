@@ -18,19 +18,19 @@ class SocialAuth
 
     public function __construct(string $provider, string $sociable)
     {
-        $config = config("socialauth.sociables.$sociable");
+        $model = config("socialauth.sociables.$sociable.model");
 
-        if (! $config || ! array_key_exists('model', $config)) {
+        if (! $model) {
             throw new InvalidArgumentException(
                 "SocialAuth sociable [$sociable] is not defined."
             );
         }
 
-        $this->sociable = $config['model'];
+        $this->sociable = $model;
 
-        if (! array_key_exists('providers', $config) || ! in_array($provider, $config['providers'])) {
+        if (! in_array($provider, config("socialauth.sociables.$sociable.providers"))) {
             throw new InvalidArgumentException(
-                "SocialAuth provider [$provider] isn't allowed for sociable [$sociable]."
+                "SocialAuth provider [$provider] not allowed for sociable [$sociable]."
             );
         }
 
