@@ -1,5 +1,5 @@
 {
-    "name": "rzb/socialauth",
+    "name": "rzb/social-auth",
     "description": "Social authentication boilerplate.",
     "license": "MIT",
     "authors": [
@@ -9,7 +9,7 @@
             "homepage": "https://renatozuma.com.br"
         }
     ],
-    "homepage": "https://github.com/rzb/socialauth",
+    "homepage": "https://github.com/rzb/social-auth",
     "keywords": ["Laravel", "SocialAuth"],
     "require": {
         "illuminate/support": "~9"
