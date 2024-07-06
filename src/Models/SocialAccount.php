@@ -4,7 +4,8 @@ namespace Rzb\SocialAuth\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Rzb\SocialAuth\Database\Factories\SocialAccountFactory;
 
 class SocialAccount extends Model
 {
@@ -12,8 +13,13 @@ class SocialAccount extends Model
 
     protected $fillable = ['provider_user_id', 'provider'];
 
-    public function user(): BelongsTo
+    public function sociable(): MorphTo
     {
-        return $this->belongsTo(config('auth.providers.users.model'));
+        return $this->morphTo();
+    }
+
+    protected static function newFactory()
+    {
+        return SocialAccountFactory::new();
     }
 }

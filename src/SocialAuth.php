@@ -3,9 +3,8 @@
 namespace Rzb\SocialAuth;
 
 use App\Exceptions\SocialAuthException;
-use App\Models\SocialAccount;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
+use Rzb\SocialAuth\Contracts\Sociable;
+use Rzb\SocialAuth\Models\SocialAccount;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Contracts\Provider;
 use Laravel\Socialite\Facades\Socialite;
@@ -14,14 +13,25 @@ class SocialAuth
 {
     private Provider $provider;
 
-    public function __construct(string $provider)
+    private string $sociableClass;
+
+    public function __construct(string $provider, string $sociableClass = '')
     {
         $this->provider = Socialite::driver($provider);
+
+        $this->sociableClass = $sociableClass ?: config('auth.providers.users.model');
     }
 
     public static function provider(string $provider): self
     {
         return new self($provider);
+    }
+
+    public function for(string $sociableClass)
+    {
+        $this->sociableClass = $sociableClass;
+
+        return $this;
     }
 
     public function stateless(): self
@@ -39,7 +49,7 @@ class SocialAuth
     /**
      * @throws SocialAuthException
      */
-    public function getUserFromToken(string $token): User
+    public function getUserFromToken(string $token): Sociable
     {
         try {
             $providerUser = $this->provider->userFromToken($token);
@@ -50,9 +60,9 @@ class SocialAuth
         return $this->providerUserToAppUser($providerUser);
     }
 
-    private function providerUserToAppUser($providerUser): User
+    private function providerUserToAppUser($providerUser): Sociable
     {
-        $socialAccount = SocialAccount::with('user')->firstOrNew([
+        $socialAccount = SocialAccount::with('sociable')->firstOrNew([
             'provider_user_id' => $providerUser->getId(),
             'provider'         => $this->getProviderName(),
         ]);
@@ -61,27 +71,22 @@ class SocialAuth
         // a corresponding User, i.e. the User has already signed in using this Social
         // account in the past, as Social Accounts cannot be created without Users.
         if ($socialAccount->exists) {
-            return $socialAccount->user;
+            return $socialAccount->sociable;
         }
 
         $user = $this->getOrCreateUser($providerUser);
 
-        $user->socialAccounts()->save($socialAccount);
+        $socialAccount->sociable()->associate($user)->save();
 
         return $user;
     }
 
-    private function getOrCreateUser($providerUser): User
+    private function getOrCreateUser($providerUser): Sociable
     {
-        $name = Str::of($providerUser->getName());
-
-        return User::firstOrCreate([
-            'email' => $providerUser->getEmail(),
-        ], [
-            'first_name' => $name->before(' '),
-            'last_name' => $name->after(' '),
-            'password' => Hash::make(Str::random(10)),
-        ]);
+        return call_user_func(
+            [$this->sociableClass, 'createFromSocialUser'],
+            $providerUser
+        );
     }
 
     private function getProviderName(): string

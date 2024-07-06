@@ -3,13 +3,13 @@
 namespace Rzb\SocialAuth\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Foundation\Auth\User;
+use Rzb\SocialAuth\Models\SocialAccount;
+use Tests\Models\User;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\SocialAccount>
- */
 class SocialAccountFactory extends Factory
 {
+    protected $model = SocialAccount::class;
+
     /**
      * Define the model's default state.
      *
@@ -18,7 +18,8 @@ class SocialAccountFactory extends Factory
     public function definition()
     {
         return [
-            'user_id' => Factory::factoryForModel(User::class),
+            'sociable_id' => User::factory(),
+            'sociable_type' => User::class,
             'provider_user_id' => fake()->sha1,
             'provider' => fake()->randomElement([
                 'GoogleProvider', 'FacebookProvider', 'TwitterProvider',
