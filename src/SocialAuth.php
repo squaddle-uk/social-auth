@@ -2,13 +2,13 @@
 
 namespace Rzb\SocialAuth;
 
-use App\Exceptions\SocialAuthException;
-use InvalidArgumentException;
+use Rzb\Exceptions\SocialAuthException;
 use Rzb\SocialAuth\Contracts\Sociable;
 use Rzb\SocialAuth\Models\SocialAccount;
-use Illuminate\Support\Str;
 use Laravel\Socialite\Contracts\Provider;
 use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Support\Str;
+use InvalidArgumentException;
 
 class SocialAuth
 {
