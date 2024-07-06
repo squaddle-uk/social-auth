@@ -21,7 +21,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Rzb\\SocialAuth\\": "src/"
+            "Rzb\\SocialAuth\\": "src/",
+            "Rzb\\SocialAuth\\Database\\Factories\\": "database/factories"
         }
     },
     "autoload-dev": {
