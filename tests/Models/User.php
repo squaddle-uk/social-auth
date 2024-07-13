@@ -3,15 +3,17 @@
 namespace Tests\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Laravel\Socialite\Contracts\User as SocialUser;
 use Illuminate\Foundation\Auth\User as AuthUser;
+use Rzb\SocialAuth\Contracts\Resourceable;
 use Rzb\SocialAuth\Contracts\Sociable;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Rzb\SocialAuth\Database\Factories\UserFactory;
 use Rzb\SocialAuth\Models\SocialAccount;
 
-class User extends AuthUser implements Sociable
+class User extends AuthUser implements Sociable, Resourceable
 {
     use HasFactory;
 
@@ -28,6 +30,11 @@ class User extends AuthUser implements Sociable
             'last_name' => $name->after(' '),
             'password' => Hash::make(Str::random(10)),
         ]);
+    }
+
+    public function toResource(): JsonResource
+    {
+        return new \Tests\Resources\UserResource($this);
     }
 
     public function socialAccounts()

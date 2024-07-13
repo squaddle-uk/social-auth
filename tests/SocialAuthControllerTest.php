@@ -54,9 +54,11 @@ class SocialAuthControllerTest extends TestCase
         $response
             ->assertOk()
             ->assertJson([
-                'success' => true,
-                'message' => '',
-                'data' => $sociable->toArray(),
+                'data' => $sociable->only([
+                    'first_name',
+                    'last_name',
+                    'email',
+                ]),
             ]);
     }
 
