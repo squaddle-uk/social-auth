@@ -2,6 +2,7 @@
 
 namespace Rzb\SocialAuth;
 
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 
 class SocialAuthServiceProvider extends ServiceProvider
@@ -13,12 +14,10 @@ class SocialAuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'rzb');
-        // $this->loadViewsFrom(__DIR__.'/../resources/views', 'rzb');
-        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
-        $this->loadRoutesFrom(__DIR__.'/../routes/social.php');
+         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
 
-        // Publishing is only necessary when using the CLI.
+         $this->registerRoutes();
+
         if ($this->app->runningInConsole()) {
             $this->bootForConsole();
         }
@@ -33,7 +32,6 @@ class SocialAuthServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__.'/../config/socialauth.php', 'socialauth');
 
-        // Register the service the package provides.
         $this->app->singleton(SocialAuth::class, function ($app) {
             return new SocialAuth(
                 request()->provider ?: config('socialauth.defaults.provider'),
@@ -61,27 +59,24 @@ class SocialAuthServiceProvider extends ServiceProvider
      */
     protected function bootForConsole(): void
     {
-        // Publishing the configuration file.
         $this->publishes([
             __DIR__.'/../config/socialauth.php' => config_path('socialauth.php'),
         ], 'socialauth.config');
+    }
 
-        // Publishing the views.
-        /*$this->publishes([
-            __DIR__.'/../resources/views' => base_path('resources/views/vendor/rzb'),
-        ], 'socialauth.views');*/
+    protected function registerRoutes(): void
+    {
+        Route::group($this->routesConfiguration(), function () {
+            $this->loadRoutesFrom(__DIR__ . '/../routes/socialauth.php');
+        });
+    }
 
-        // Publishing assets.
-        /*$this->publishes([
-            __DIR__.'/../resources/assets' => public_path('vendor/rzb'),
-        ], 'socialauth.views');*/
-
-        // Publishing the translation files.
-        /*$this->publishes([
-            __DIR__.'/../resources/lang' => resource_path('lang/vendor/rzb'),
-        ], 'socialauth.views');*/
-
-        // Registering package commands.
-        // $this->commands([]);
+    protected function routesConfiguration(): array
+    {
+        return [
+            'prefix' => config('socialauth.routes.prefix'),
+            'middleware' => config('socialauth.routes.middleware'),
+            'controller' => config('socialauth.routes.controller'),
+        ];
     }
 }

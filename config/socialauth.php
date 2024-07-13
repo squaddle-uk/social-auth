@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use Rzb\SocialAuth\Http\Controllers\SocialAuthController;
 
 return [
     'defaults' => [
@@ -15,5 +16,11 @@ return [
                 'google',
             ],
         ],
+    ],
+
+    'routes' => [
+        'controller' => SocialAuthController::class,
+        'middleware' => null,
+        'prefix' => 'auth/social',
     ],
 ];
