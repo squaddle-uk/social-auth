@@ -136,10 +136,10 @@ use Laravel\Socialite\Contracts\User as SocialUser;
 
 public static function createFromSocialUser(SocialUser $socialUser): self
 {
-    return self::firstOrCreate([
-        'email' => $socialUser->getEmail(),
-    ], [
+    return self::forceCreate([
         // map your model attributes here
+        'email' => $socialUser->getEmail(),
+        'name' => $socialUser->getName(),
     ]);
 }
 ```
@@ -151,13 +151,6 @@ public static function createFromSocialUser(SocialUser $socialUser): self
 - [All Contributors][link-contributors]
 
 [ico-version]: https://img.shields.io/packagist/v/rzb/socialauth.svg?style=flat-square
-[ico-downloads]: https://img.shields.io/packagist/dt/rzb/socialauth.svg?style=flat-square
-[ico-travis]: https://img.shields.io/travis/rzb/socialauth/master.svg?style=flat-square
-[ico-styleci]: https://styleci.io/repos/12345678/shield
 
-[link-packagist]: https://packagist.org/packages/rzb/socialauth
-[link-downloads]: https://packagist.org/packages/rzb/socialauth
-[link-travis]: https://travis-ci.org/rzb/socialauth
-[link-styleci]: https://styleci.io/repos/12345678
 [link-author]: https://github.com/rzb
 [link-contributors]: ../../contributors
