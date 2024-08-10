@@ -3,6 +3,7 @@
 namespace Tests;
 
 use Illuminate\Support\Facades\Config;
+use InvalidArgumentException;
 use Rzb\SocialAuth\Models\SocialAccount;
 use Rzb\SocialAuth\SocialAuth;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -68,6 +69,30 @@ class SocialAuthTest extends TestCase
         $this->assertDatabaseHas('users', ['email' => 'sociallogin@example.com']);
         $this->assertDatabaseCount('users', 1);
         $this->assertDatabaseCount('social_accounts', 1);
+    }
+
+    /** @test */
+    public function it_throws_invalidargument_exception_if_given_sociable_is_not_defined_in_the_config()
+    {
+        Config::set('socialauth.sociables.user', null);
+
+        $this->assertThrows(
+            fn () => new SocialAuth('google', 'user'),
+            InvalidArgumentException::class,
+            'SocialAuth sociable [user] is not defined.'
+        );
+    }
+
+    /** @test */
+    public function it_throws_invalidargument_exception_if_given_provider_is_not_allowed_for_the_sociable_in_the_config()
+    {
+        Config::set('socialauth.sociables.user.providers', ['github', 'facebook']);
+
+        $this->assertThrows(
+            fn () => new SocialAuth('google', 'user'),
+            InvalidArgumentException::class,
+            'SocialAuth provider [google] not allowed for sociable [user].'
+        );
     }
 
     protected function getPackageProviders($app)
