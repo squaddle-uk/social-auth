@@ -12,9 +12,8 @@ trait Sociable
     {
         $name = Str::of($socialUser->getName());
 
-        return self::firstOrCreate([
+        return self::forceCreate([
             'email' => $socialUser->getEmail(),
-        ], [
             'first_name' => $name->before(' '),
             'last_name' => $name->after(' '),
             'password' => Hash::make(Str::random(10)),

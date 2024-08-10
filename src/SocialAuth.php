@@ -14,7 +14,7 @@ class SocialAuth
 {
     private Provider $provider;
 
-    private string $sociable;
+    private Sociable $sociable;
 
     public function __construct(string $provider, string $sociable)
     {
@@ -26,7 +26,7 @@ class SocialAuth
             );
         }
 
-        $this->sociable = $model;
+        $this->sociable = new $model();
 
         if (! in_array($provider, config("socialauth.sociables.$sociable.providers"))) {
             throw new InvalidArgumentException(
@@ -77,19 +77,20 @@ class SocialAuth
             return $socialAccount->sociable;
         }
 
-        $sociable = $this->getOrCreateSociable($providerUser);
+        $sociable = $this->firstOrCreateSociable($providerUser);
 
         $socialAccount->sociable()->associate($sociable)->save();
 
         return $sociable;
     }
 
-    private function getOrCreateSociable($providerUser): Sociable
+    private function firstOrCreateSociable($providerUser): Sociable
     {
-        return call_user_func(
-            [$this->sociable, 'createFromSocialUser'],
-            $providerUser
-        );
+        if ($sociable = $this->sociable->whereEmail($providerUser->getEmail())->first()) {
+            return $sociable;
+        }
+
+        return $this->sociable->createFromSocialUser($providerUser);
     }
 
     private function getProviderName(): string
