@@ -14,6 +14,8 @@ return [
             'model' => User::class,
             'providers' => [
                 'google',
+                'facebook',
+                'twitter',
             ],
         ],
     ],
