@@ -60,7 +60,7 @@ By default, once installed the package automatically exposes 2 stateless endpoin
     ]
     ```
 
-### Segments
+### URL Segments
 - `provider` - the provider name. e.g. google, facebook, etc.
 
 - `sociable` - the name of the sociable model as per your config file. e.g.user, customer, etc.
@@ -77,6 +77,8 @@ You can support authentication for any model you want.
 
 
 ``` php
+    // config/socialauth.php
+    
     'sociables' => [
     
         // default model. You can remove it or tweak it.
@@ -118,6 +120,8 @@ use Rzb\SocialAuth\Traits\Resourceable;
 
 You can apply middlewares and route prefix to the package routes. Or even replace its controller with your own.
 ``` php
+    // config/socialauth.php
+    
     'routes' => [
         'controller' => SocialAuthController::class,
         'middleware' => null,
