@@ -43,11 +43,31 @@ class User extends AuthUser implements SociableContract, ResourceableContract
 $ php artisan vendor:publish --provider="Rzb\SocialAuth\SocialAuthServiceProvider" --tag="config"
 ```
 
-## Usage
+## How it works
 
-For most projects, you won't have to do anything at all after installation. The package automatically exposes the endpoints and enables Google, Facebook and Twitter providers for the User model.
+By default, once installed the package automatically exposes 2 stateless endpoints and accepts Google, Facebook and Twitter providers for the User model. These routes expect the same 2 segments.
 
-If however you have different needs, you're free to tweak the configuration, use your own controller or even implement your own DB logic.
+### Routes
+- Returns the auth URL for the given provider, so your frontend can load the provider's auth page.
+    ``` md
+    GET  /auth/social/{provider}/{sociable}
+    ```
+- Callback route that finds or creates the given sociable model and returns its JsonResource.
+    ``` php
+    POST /auth/social/{provider}/{sociable}
+    [
+        'access_token' => 'required|string' // incoming token from provider
+    ]
+    ```
+
+### Segments
+- `provider` - the provider name. e.g. google, facebook, etc.
+
+- `sociable` - the name of the sociable model as per your config file. e.g.user, customer, etc.
+
+## Customization
+
+For most projects, you won't have to do anything at all after installation. If however you have different needs, you're free to tweak the configuration to add/remove models and providers, use your own controller or even implement your own DB logic.
 
 ### Customize supported models and providers
 
@@ -96,28 +116,7 @@ use Rzb\SocialAuth\Traits\Resourceable;
 
 ### Customize routes and controller
 
-By default, the package exposes 2 stateless routes that expect the same 2 segments:
-
-#### Routes
-- Returns the auth URL for the given provider, so your frontend can load the provider's auth page.
-    ``` md
-    GET  /auth/social/{provider}/{sociable}
-    ```
-- Callback route that finds or creates the given sociable model and returns its JsonResource.
-    ``` php
-    POST /auth/social/{provider}/{sociable}
-    [
-        'access_token' => 'required|string' // incoming token from provider
-    ]
-    ```
-
-#### Segments
-- `provider` - the provider name. e.g. google, facebook, etc.
-
-- `sociable` - the name of the sociable model as per your config file. e.g.user, customer, etc.
-    
-
-You can apply middlewares and route prefix to both routes. Or even replace its controller with your own.
+You can apply middlewares and route prefix to the package routes. Or even replace its controller with your own.
 ``` php
     'routes' => [
         'controller' => SocialAuthController::class,
