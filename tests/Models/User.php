@@ -19,11 +19,6 @@ class User extends AuthUser implements SociableContract, ResourceableContract
 
     protected $guarded = [];
 
-    public function socialAccounts()
-    {
-        return $this->morphMany(SocialAccount::class, 'sociable');
-    }
-
     protected static function newFactory()
     {
         return UserFactory::new();

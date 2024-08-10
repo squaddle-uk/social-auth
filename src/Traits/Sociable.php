@@ -3,6 +3,7 @@
 namespace Rzb\SocialAuth\Traits;
 
 use Laravel\Socialite\Contracts\User as SocialUser;
+use Rzb\SocialAuth\Models\SocialAccount;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -18,5 +19,10 @@ trait Sociable
             'last_name' => $name->after(' '),
             'password' => Hash::make(Str::random(10)),
         ]);
+    }
+
+    public function socialAccounts()
+    {
+        return $this->morphMany(SocialAccount::class, 'sociable');
     }
 }
