@@ -77,6 +77,9 @@ class SocialAuth
             return $socialAccount->sociable;
         }
 
+        // Else, we check if there's already a Sociable associated with the Social User email.
+        // If we find one, we just create a Social Account for him. Otherwise, we go ahead
+        // and create both the Social Account and the Sociable using his social data.
         $sociable = $this->firstOrCreateSociable($providerUser);
 
         $socialAccount->sociable()->associate($sociable)->save();
