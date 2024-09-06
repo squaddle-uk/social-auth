@@ -2,6 +2,7 @@
 
 namespace Rzb\SocialAuth;
 
+use Exception;
 use Rzb\SocialAuth\Exceptions\SocialAuthException;
 use Rzb\SocialAuth\Contracts\Sociable;
 use Rzb\SocialAuth\Models\SocialAccount;
@@ -56,8 +57,8 @@ class SocialAuth
     {
         try {
             $providerUser = $this->provider->userFromToken($token);
-        } catch (\Exception $e) {
-            throw new SocialAuthException($this->getProviderName(), $token);
+        } catch (Exception $e) {
+            throw new SocialAuthException($this->getProviderName(), $token, $e);
         }
 
         return $this->providerUserToSociable($providerUser);
