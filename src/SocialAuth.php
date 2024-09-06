@@ -57,7 +57,7 @@ class SocialAuth
         try {
             $providerUser = $this->provider->userFromToken($token);
         } catch (\Exception $e) {
-            throw new SocialAuthException($this->getProviderName());
+            throw new SocialAuthException($this->getProviderName(), $token);
         }
 
         return $this->providerUserToSociable($providerUser);
