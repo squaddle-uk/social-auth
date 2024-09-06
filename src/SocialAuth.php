@@ -2,7 +2,7 @@
 
 namespace Rzb\SocialAuth;
 
-use Rzb\Exceptions\SocialAuthException;
+use Rzb\SocialAuth\Exceptions\SocialAuthException;
 use Rzb\SocialAuth\Contracts\Sociable;
 use Rzb\SocialAuth\Models\SocialAccount;
 use Laravel\Socialite\Contracts\Provider;
