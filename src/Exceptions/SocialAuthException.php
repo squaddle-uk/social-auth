@@ -1,6 +1,6 @@
 <?php
 
-namespace Rzb\Exceptions;
+namespace Rzb\SocialAuth\Exceptions;
 
 use Exception;
 
