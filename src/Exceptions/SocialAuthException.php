@@ -6,10 +6,10 @@ use Exception;
 
 class SocialAuthException extends Exception
 {
-    public function __construct(string $provider, string $token)
+    public function __construct(protected string $provider, protected string $token, Exception $previous = null)
     {
-        parent::__construct();
+        $message = "Social authentication using [$provider] not authorized.";
 
-        $this->message = "Social authentication using [$provider] with token [$token] not authorized.";
+        parent::__construct($message, 0, $previous);
     }
 }
