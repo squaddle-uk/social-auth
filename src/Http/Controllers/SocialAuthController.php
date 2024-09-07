@@ -8,7 +8,7 @@ use Rzb\SocialAuth\SocialAuth;
 
 class SocialAuthController extends Controller
 {
-    public function __construct(private SocialAuth $socialAuth)
+    public function __construct(protected SocialAuth $socialAuth)
     {}
 
     public function redirect(): string
