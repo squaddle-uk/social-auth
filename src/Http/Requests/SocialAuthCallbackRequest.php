@@ -24,7 +24,7 @@ class SocialAuthCallbackRequest extends FormRequest
     public function rules()
     {
         return [
-            'access_token' => 'required|string',
+            'code' => 'required|string',
         ];
     }
 }

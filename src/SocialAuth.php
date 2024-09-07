@@ -64,6 +64,11 @@ class SocialAuth
         return $this->providerUserToSociable($providerUser);
     }
 
+    public function user(): Sociable
+    {
+        return $this->providerUserToSociable($this->provider->user());
+    }
+
     private function providerUserToSociable($providerUser): Sociable
     {
         $socialAccount = SocialAccount::with('sociable')->firstOrNew([

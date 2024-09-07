@@ -18,6 +18,6 @@ class SocialAuthController extends Controller
 
     public function callback(CallbackRequest $request): JsonResource
     {
-        return $this->socialAuth->stateless()->getUserFromToken($request->access_token)->toResource();
+        return $this->socialAuth->stateless()->user()->toResource();
     }
 }
