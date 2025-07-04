@@ -12,7 +12,7 @@
     "homepage": "https://github.com/rzb/social-auth",
     "keywords": ["Laravel", "SocialAuth"],
     "require": {
-        "illuminate/support": "^9.0|^10.0",
+        "illuminate/support": "^9.0|^10.0|^11|^12",
         "laravel/socialite": "^5.16"
     },
     "require-dev": {
