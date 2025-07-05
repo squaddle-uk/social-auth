@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests;
+namespace Tests\App;
 
 use Illuminate\Support\Facades\Config;
 use InvalidArgumentException;
