@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests;
+namespace Tests\App;
 
 use Illuminate\Support\Facades\Config;
 use Laravel\Socialite\Facades\Socialite;
@@ -42,13 +42,14 @@ class SocialAuthControllerTest extends TestCase
     public function it_returns_the_sociable_model_for_the_given_provider_and_token()
     {
         $sociable = Sociable::factory()->make();
-        SocialAuth::shouldReceive('stateless->getUserFromToken')
+        SocialAuth::shouldReceive('stateless->user')
             ->andReturn($sociable);
 
         $response = $this->postJson(route('social.callback', [
             'provider' => 'google',
             'sociable' => 'user',
             'access_token' => 'whatever',
+            'code' => 'whatever',
         ]));
 
         $response
