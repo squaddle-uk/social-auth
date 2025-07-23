@@ -7,8 +7,12 @@ use Illuminate\Support\Str;
 
 trait Resourceable
 {
-    public function toResource(): JsonResource
+    public function toResource(?string $resourceClass = null): JsonResource
     {
+        if ($resourceClass && is_subclass_of($resourceClass, JsonResource::class)) {
+            return new $resourceClass($this);
+        }
+
         // We assume we're using the Model and Resource namespaces of a typical
         // Laravel app. Otherwise, we fall back to the generic JsonResource
         // class. This helps with testing as we can mimic the structure.
